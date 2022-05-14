@@ -1,0 +1,11 @@
+pandas
+nltk
+numpy
+spacy
+matplotlib
+keras
+tensorflow
+transformers
+datasets
+torch
+sklearn
