@@ -5,16 +5,6 @@ from BERT import BertModel
 from HFDataset import HFDataSet
 
 
-def label_to_language(label: str) -> str:
-    if label == "LABEL_0":
-        return "French"
-    elif label == "LABEL_1":
-        return "Norwegian"
-    elif label == "LABEL_2":
-        return "Russian"
-    return label
-
-
 def set_seed(seed: int) -> None:
     """
     Helper function for reproducible behavior to set the seed in ``random``, ``numpy``, ``torch`` and/or ``tf`` (if

@@ -16,7 +16,7 @@ class HFDataSet:
     Creates a DatasetDict that stores each set.
     """
 
-    def __init__(self, path=PATH):
+    def __init__(self, path: str = PATH):
         self.path = path
         self.tokenizer = BertTokenizerFast.from_pretrained('bert-base-cased')
         if os.path.exists(self.path):

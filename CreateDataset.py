@@ -4,6 +4,7 @@ import re
 from markdown import Markdown
 from io import StringIO
 import sys
+import numpy as np
 
 pd.options.display.encoding = sys.stdout.encoding
 
@@ -14,7 +15,7 @@ DATASET_PATH: str = "data/dataset.pkl"
 
 class Dataset:
     def __init__(self, small: bool = True, path: str = PATH, countries: list = COUNTRIES, ds_path: str = DATASET_PATH,
-                 from_csv: bool = True, nrows=40000):
+                 from_csv: bool = True, nrows=1000):
         self.nrows = nrows
         self.ds_path = ds_path
         self.small = small
@@ -73,6 +74,8 @@ class Dataset:
 
     def clean(self):
         self.df.text = self.df.text.apply(lambda txt: self.clean_text(txt))
+        self.df.replace(r'^\s*$', np.nan, regex=True)
+        self.df.dropna()
 
     @staticmethod
     def country_to_language(country: str) -> str:
@@ -97,6 +100,10 @@ class Dataset:
 
     @staticmethod
     def clean_text(text: str):
+        # Remove post if it is shorter than 15 characters
+        if len(text) < 15:
+            return ""
+
         # Remove author name and subreddit
         text = text.strip()
         text_list = re.split("\[(.*?)\]", text)

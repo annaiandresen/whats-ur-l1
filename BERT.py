@@ -2,11 +2,18 @@ import torch
 from sklearn.metrics import accuracy_score, recall_score, precision_score
 from transformers import Trainer, TrainingArguments, DataCollatorWithPadding, \
     BertForSequenceClassification, pipeline
-import numpy as np
-import random
 from HFDataset import HFDataSet
 
 PATH: str = "/content/gdrive/MyDrive/model"
+
+def label_to_language(label: str) -> str:
+    if label == "LABEL_0":
+        return "French"
+    elif label == "LABEL_1":
+        return "Norwegian"
+    elif label == "LABEL_2":
+        return "Russian"
+    return label
 
 
 class BertModel:
@@ -19,7 +26,7 @@ class BertModel:
         if is_trained:
             self.model = BertForSequenceClassification.from_pretrained(self.path).to(self.device)
         else:
-            self.model = BertForSequenceClassification.from_pretrained("bert-base-cased", num_labels=4).to(self.device)
+            self.model = BertForSequenceClassification.from_pretrained("bert-base-cased", num_labels=3).to(self.device)
         self.trainer = self.build_trainer()
         self.pipe = pipeline("sentiment-analysis", model=self.model, tokenizer=self.tokenizer, device=0)
 
@@ -67,6 +74,7 @@ class BertModel:
             metrics = self.trainer.predict(self.ds["test"])
         else:
             metrics = self.trainer.evaluate()
+        print(metrics)
         return metrics
 
     def resume_training(self, checkpoint_path: str):
@@ -80,3 +88,13 @@ class BertModel:
         print(label_to_language(label))
         print("Score: ", res[0]['score'])
         return res
+
+
+def label_to_language(label: str) -> str:
+    if label == "LABEL_0":
+        return "French"
+    elif label == "LABEL_1":
+        return "Norwegian"
+    elif label == "LABEL_2":
+        return "Russian"
+    return label
